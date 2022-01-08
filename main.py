@@ -1,4 +1,6 @@
 from newspaper import Article
+from googlesearch import search
+import requests
 import random
 import string
 import nltk
@@ -10,17 +12,38 @@ import warnings
 warnings.filterwarnings('ignore')
 
 nltk.download('punkt', quiet=True)
+# query = 'apple'
+# link = search(query, tld="co.in", num=10, stop=10, pause=2)
+print('Tec Bot : I am Tec Bot , I will Answer Your queries about anything . if you want to exit, '
+      'type bye')
+query = input(('Tec Bot : Enter the keyword on what you want to know?'))
+
+exit_list = ['exit', 'bye', 'see you later', 'quit', 'break']
+
+links = []
+for j in search(query, tld="co.in", num=10, stop=10, pause=2):
+    links.append(j)
+
+
+def get_Link(links):
+    # printing link For users
+    link = random.choice(links)
+    print('Tec Bot: Im using this link : \n ')
+    print(link)
+    print('If you want to change the link type "change" anytime')
+    return link
+
 
 # Article
-article = Article(
-    'https://www.infoq.com/articles/java-16-new-features/?topicPageSponsorship=eb23c8b0-5fa3-4f9a-8c59-be00f5b6e3bd')
+# article = Article(
+#      'https://www.infoq.com/articles/java-16-new-features/?topicPageSponsorship=eb23c8b0-5fa3-4f9a-8c59-be00f5b6e3bd')
+article = Article(get_Link())
 article.download()
 article.parse()
 article.nlp()
 corpus = article.text
 
 # Artical print
-
 # print(corpus)
 
 # Tokenization
@@ -28,11 +51,14 @@ corpus = article.text
 text_value = corpus
 sentence_list = nltk.sent_tokenize(text_value)
 
+
 # check out the list
 # print(sentence_list)
 
 
 # Greeting Response
+
+
 def greeting_response(text):
     text = text.lower()
 
@@ -64,6 +90,7 @@ def index_sort(list_var):
 # Bot response
 def bot_response(user_input):
     user_input = user_input.lower()
+    input = user_input
     sentence_list.append(user_input)
     bot_response_value = ''
     cm = CountVectorizer().fit_transform(sentence_list)
@@ -89,6 +116,7 @@ def bot_response(user_input):
 
     return bot_response_value
 
+
 # Test_ bot_response Function
 # user_input = 'hellow world'
 # sentence_list.append(user_input)
@@ -104,17 +132,15 @@ def bot_response(user_input):
 
 # Starting chat
 
-print('Tec Bot : I am Tec Bot , I will Answer Your queries about  What is New in Java 16 . if you want to exit, '
-      'type bye')
-exit_list = ['exit', 'bye', 'see you later', 'quit', 'break']
 
 while True:
     user_input = input('User: ')
     if user_input.lower() in exit_list:
         print('Tec Bot: Chat With you later!')
         break
-    if user_input.lower() == 'maha pakaya':
-        print('KunuHarupa Bot:' + 'Ai hutto')
+    if user_input.lower() == 'change':
+        print()
+        break
     else:
         if greeting_response(user_input) is not None:
             print('Tec Bot: ' + greeting_response(user_input))
